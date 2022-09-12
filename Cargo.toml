@@ -1,0 +1,18 @@
+[package]
+name = "twitch-hud"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.64"
+bstr = "1.0.0"
+nom = "7.1.1"
+termion = "1.5.6"
+
+[profile.release]
+lto = "fat"
+debug = 0
+opt-level = 3
+strip = true
