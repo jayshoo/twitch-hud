@@ -1,8 +1,8 @@
 use nom::bytes::complete::{is_a, is_not};
 use nom::character::complete::char;
 use nom::multi::separated_list1;
-use nom::sequence::{delimited, pair};
-use nom::{bytes::complete::take_while1, combinator::opt, sequence::preceded, IResult};
+use nom::sequence::{delimited, pair, terminated};
+use nom::{bytes::complete::take_while1, combinator::opt, IResult};
 
 #[derive(Debug, PartialEq)]
 pub struct Tag {
@@ -31,7 +31,7 @@ fn key_try2(i: &str) -> IResult<&str, &str> {
 }
 
 fn tag(i: &str) -> IResult<&str, Tag> {
-    pair(key, opt(preceded(char('='), escaped_value)))(i).map(|(i, res)| {
+    pair(terminated(key, char('=')), opt(escaped_value))(i).map(|(i, res)| {
         (
             i,
             Tag {
@@ -61,19 +61,45 @@ pub fn tags(i: &str) -> IResult<&str, Option<Vec<Tag>>> {
 
 #[test]
 fn test() {
+    let TAG = |key: &str, value: &str| Tag {
+        key: String::from(key),
+        value: Some(String::from(value)),
+    };
+    let TAGNONE = |key: &str| Tag {
+        key: String::from(key),
+        value: None,
+    };
+
     assert_eq!(
         tags("@key=value;other=value rest of message"),
         Ok((
             "rest of message",
+            Some(vec![TAG("key", "value"), TAG("other", "value"),])
+        ))
+    );
+
+    assert_eq!(
+        tags("@badge-info=;badges=;client-nonce=1edccf36d7b90525fd32b161e7a85996;color=#727082;display-name=The_Assault_Corgi;emotes=;first-msg=0;flags=;id=3884c9e2-793d-442d-8c2a-1c9b0f4171c3;mod=0;returning-chatter=0;room-id=121605691;subscriber=0;tmi-sent-ts=1663040755420;turbo=0;user-id=78466127;user-type= :the_assault_corgi!the_assault_corgi@the_assault_corgi.tmi.twitch.tv PRIVMSG #lilmanic :HAPPY BIRTHDAY @Mk22222"),
+        Ok((
+            ":the_assault_corgi!the_assault_corgi@the_assault_corgi.tmi.twitch.tv PRIVMSG #lilmanic :HAPPY BIRTHDAY @Mk22222",
             Some(vec![
-                Tag {
-                    key: String::from("key"),
-                    value: Some(String::from("value"))
-                },
-                Tag {
-                    key: String::from("other"),
-                    value: Some(String::from("value"))
-                }
+                TAGNONE("badge-info"),
+                TAGNONE("badges"),
+                TAG("client-nonce", "1edccf36d7b90525fd32b161e7a85996"),
+                TAG("color", "#727082"),
+                TAG("display-name","The_Assault_Corgi"),
+                TAGNONE("emotes"),
+                TAG("first-msg","0"),
+                TAGNONE("flags"),
+                TAG("id","3884c9e2-793d-442d-8c2a-1c9b0f4171c3"),
+                TAG("mod","0"),
+                TAG("returning-chatter","0"),
+                TAG("room-id","121605691"),
+                TAG("subscriber","0"),
+                TAG("tmi-sent-ts","1663040755420"),
+                TAG("turbo","0"),
+                TAG("user-id","78466127"),
+                TAGNONE("user-type"),
             ])
         ))
     )
