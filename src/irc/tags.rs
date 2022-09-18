@@ -6,8 +6,8 @@ use nom::{bytes::complete::take_while1, combinator::opt, IResult};
 
 #[derive(Debug, PartialEq)]
 pub struct Tag {
-    key: String,
-    value: Option<String>,
+    pub key: String,
+    pub value: Option<String>,
 }
 
 fn host(i: &str) -> IResult<&str, &str> {

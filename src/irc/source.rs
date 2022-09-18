@@ -2,7 +2,7 @@ use nom::character::complete::char;
 use nom::{bytes::complete::take_while1, combinator::opt, sequence::preceded, IResult};
 
 fn is_host_char(c: char) -> bool {
-    matches!(c, 'a'..='z' | 'A'..='Z' | '0'..='9' | '.' | '-')
+    matches!(c, 'a'..='z' | 'A'..='Z' | '0'..='9' | '.' | '-' | '_')
 }
 
 #[derive(Debug, PartialEq)]

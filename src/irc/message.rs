@@ -10,10 +10,10 @@ use super::tags::{tags, Tag};
 
 #[derive(Debug, PartialEq)]
 pub struct Message {
-    tags: Option<Vec<Tag>>,
-    source: Option<Source>,
-    command: String,
-    params: Vec<String>,
+    pub tags: Option<Vec<Tag>>,
+    pub source: Option<Source>,
+    pub command: String,
+    pub params: Vec<String>,
 }
 
 impl Message {
