@@ -51,7 +51,9 @@ fn test() {
             "",
             Message {
                 tags: None,
-                source: Some(Source{user:String::from("wolfguy84")}),
+                source: Some(Source {
+                    user: String::from("wolfguy84")
+                }),
                 command: String::from("PRIVMSG"),
                 params: vec![String::from("#moonmoon"), String::from("INFINITE OOBA SAW")],
             }

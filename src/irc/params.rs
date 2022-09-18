@@ -26,6 +26,9 @@ pub fn params(i: &str) -> IResult<&str, Vec<String>> {
 fn test() {
     assert_eq!(
         params("#moonmoon :message text here"),
-        Ok(("", vec![String::from("#moonmoon"), String::from("message text here")]))
+        Ok((
+            "",
+            vec![String::from("#moonmoon"), String::from("message text here")]
+        ))
     )
 }

@@ -38,6 +38,11 @@ pub fn source(i: &str) -> IResult<&str, Option<Source>> {
 fn test() {
     assert_eq!(
         source(":wolfguy84!wolfguy84@wolfguy84.tmi.twitch.tv "),
-        Ok(("", Some(Source{ user: String::from("wolfguy84") })))
+        Ok((
+            "",
+            Some(Source {
+                user: String::from("wolfguy84")
+            })
+        ))
     )
 }
